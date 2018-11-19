@@ -1,0 +1,39 @@
+//change cell's state based on its own state and the number of neighbours
+def evolveCell(field nNeighbours,field oldState) -> (field):
+  field newState = if nNeighbours == 2 then 1 else 0 fi
+  newState = if nNeighbours == 3 then if oldState == 1 then 1 else 0 fi else 0 fi
+  return newState
+
+//count the number of neighbours of a given cell
+def countNeighbours(field[9] array, field index) -> (field):
+  field sum = if index == 0 then array[1] + array[3] + array[4] else if index == 1 then array[0] + array[2] + array[3] + array[4] + array[5] else if index == 2 then array[1] + array[4] + array[5] else if index == 3 then array[0] + array[1] + array[4] + array[6] + array[7] else if index == 4 then array[0] + array[1] + array[2] + array[3] + array[5] + array[6] + array[7] + array[8] else if index == 5 then array[1] + array[2] + array[4] + array[7] + array[8] else if index == 6 then array[3] + array[4] + array[7] else if index == 7 then array[3] + array[4] + array[5] + array[6] + array[8] else array[4] + array[5] + array[7] fi fi fi fi fi fi fi fi
+  return sum
+
+//compute new array
+def evolveArray(field[9] array ) -> (field[9]):
+  field[9] newArray = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+  for field k in 0..9 do
+    field newVal = evolveCell(countNeighbours(array, k), array[k]) 
+    newArray[k] = newVal //directly assigning evolveCell() output doesn't work for some reasone
+  endfor
+  
+  return newArray
+
+def main(private field[9[ array, field[9] final) -> (field):
+
+  //perform 2 simulation steps
+  field[9] array1 = evolveArray(array)
+  field[9] array2 = evolveArray(array1)
+  
+  field differences = 0
+  //compare arrays
+  for field j in 0..9 do
+    //if cells are different increase differences variable
+    differences = if array2[j] == final[j] then differences else verdict + 1 fi
+  endfor
+
+  
+  //return binary value indicating if the initial and final arrays are the same (1) or not (0)
+  field verdict = if differences == 0 then 1 else 0 fi 
+  
+  return finish
